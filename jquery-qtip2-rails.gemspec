@@ -2,11 +2,11 @@
 require File.expand_path('../lib/jquery-qtip2-rails/version', __FILE__)
 
 Gem::Specification.new do |gem|
-  gem.authors       = ["Tanguy Krotoff"]
+  gem.authors       = ["Tanguy Krotoff (jQuery plugin by Craig Thompson)"]
   gem.email         = ["tkrotoff@gmail.com"]
-  gem.description   = %q{TODO: Write a gem description}
-  gem.summary       = %q{TODO: Write a gem summary}
-  gem.homepage      = ""
+  gem.description   = %q{qTip2 jQuery plugin}
+  gem.summary       = %q{qTip2 packaged for the Rails 3.1+ asset pipeline}
+  gem.homepage      = "http://tkrotoff.github.com/jquery-qtip2-rails/"
 
   gem.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   gem.files         = `git ls-files`.split("\n")
