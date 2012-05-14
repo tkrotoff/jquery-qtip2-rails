@@ -14,4 +14,6 @@ Gem::Specification.new do |gem|
   gem.name          = "jquery-qtip2-rails"
   gem.require_paths = ["lib"]
   gem.version       = Jquery::Qtip2::Rails::VERSION
+
+  gem.add_dependency "railties", ">= 3.1.0"
 end
