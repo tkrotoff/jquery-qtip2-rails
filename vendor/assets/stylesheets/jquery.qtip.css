@@ -1,3 +1,8 @@
 /*
- *= require_tree ./jquery-qtip/
+ *= include ./jquery-qtip/header.txt
+ *= include ./jquery-qtip/core.css
+ *= include ./jquery-qtip/modal/modal.css
+ *= include ./jquery-qtip/tips/tips.css
+ *= include ./jquery-qtip/styles.css
+ *= include ./jquery-qtip/extra.css
 */
