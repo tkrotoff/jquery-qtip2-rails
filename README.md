@@ -1,6 +1,6 @@
-# Jquery::Qtip2::Rails
+# jQuery qTip2 for Rails
 
-TODO: Write a gem description
+qTip2 packaged for the Rails 3.1+ asset pipeline
 
 ## Installation
 
@@ -18,7 +18,38 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Add stylesheet file to app/assets/stylesheets/application.css:
+
+    *= require jquery.qtip.css
+
+Add JavaScipt file to app/assets/javascripts/application.js:
+
+    //= require jquery.qtip.js
+
+You can also create your own app/assets/stylesheets/jquery.qtip.css and app/assets/javascripts/jquery.qtip.js:
+
+    /*
+     *= include ./jquery-qtip/header.txt
+     *= include ./jquery-qtip/core.css
+     *= include ./jquery-qtip/modal/modal.css
+     *= include ./jquery-qtip/tips/tips.css
+     *= include ./jquery-qtip/styles.css
+     *= include ./jquery-qtip/extra.css
+    */
+
+    //= include ./jquery-qtip/header.txt
+    //= include ./jquery-qtip/intro.js
+    //= include ./jquery-qtip/core.js
+    //= include ./jquery-qtip/ajax/ajax.js
+    //= include ./jquery-qtip/bgiframe/bgiframe.js
+    //= include ./jquery-qtip/imagemap/imagemap.js
+    //= include ./jquery-qtip/modal/modal.js
+    //= include ./jquery-qtip/svg/svg.js
+    //= include ./jquery-qtip/tips/tips.js
+    //= include ./jquery-qtip/outro.js
+
+This allows you to customize the use of qTip2 and enable the plugins
+that you like thanks to the asset pipeline preprocessor.
 
 ## Contributing
 
