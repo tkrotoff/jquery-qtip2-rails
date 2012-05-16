@@ -1,6 +1,7 @@
 # jQuery qTip2 for Rails
 
-qTip2 packaged for the Rails 3.1+ asset pipeline
+qTip2 packaged for the Rails 3.1+ asset pipeline.
+Check [qTip2 project home page](http://craigsworks.com/projects/qtip2/).
 
 ## Installation
 
@@ -18,24 +19,33 @@ Or install it yourself as:
 
 ## Usage
 
-Add stylesheet file to app/assets/stylesheets/application.css:
+The use of qTip2 can be [customized](http://craigsworks.com/projects/qtip2/download/) to fit your own needs.
+This gem works in a similar manner.
 
-    *= require jquery.qtip.css
+### "Full" version of qTip2
 
-Add JavaScipt file to app/assets/javascripts/application.js:
+The full version of qTip2 includes all its plugins. This is the default and conservative choice and
+I recommend you to use this version.
+
+Add the following JavaScript file to `app/assets/javascripts/application.js`:
 
     //= require jquery.qtip.js
 
-You can also create your own app/assets/stylesheets/jquery.qtip.css and app/assets/javascripts/jquery.qtip.js:
+Add the following stylesheet file to `app/assets/stylesheets/application.css`:
 
-    /*
-     *= include ./jquery-qtip/header.txt
-     *= include ./jquery-qtip/core.css
-     *= include ./jquery-qtip/modal/modal.css
-     *= include ./jquery-qtip/tips/tips.css
-     *= include ./jquery-qtip/styles.css
-     *= include ./jquery-qtip/extra.css
-    */
+    *= require jquery.qtip.css
+
+### Basic version of qTip2
+
+The basic version of qTip2 does not include any plugin.
+
+File `app/assets/javascripts/application.js`:
+
+    //= require jquery.qtip.basic.js
+
+### Customized version of qTip2
+
+You can also create your own `app/assets/javascripts/jquery.qtip.js` file:
 
     //= include ./jquery-qtip/header.txt
     //= include ./jquery-qtip/intro.js
@@ -48,13 +58,30 @@ You can also create your own app/assets/stylesheets/jquery.qtip.css and app/asse
     //= include ./jquery-qtip/tips/tips.js
     //= include ./jquery-qtip/outro.js
 
-This allows you to customize the use of qTip2 and enable the plugins
-that you like thanks to the asset pipeline preprocessor.
+And `app/assets/stylesheets/jquery.qtip.css` file:
 
-## Contributing
+    /*
+     *= include ./jquery-qtip/header.txt
+     *= include ./jquery-qtip/core.css
+     *= include ./jquery-qtip/modal/modal.css
+     *= include ./jquery-qtip/tips/tips.css
+     *= include ./jquery-qtip/styles.css
+     *= include ./jquery-qtip/extra.css
+    */
 
-1. Fork it
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Added some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
+This allows you to enable only the plugins that you need and thus reduce qTip2 size.
+This is possible thanks to the asset pipeline preprocessor `include` directive.
+Files `jquery.qtip.js` and `jquery.qtip.basic.js` provided with this gem work the exact same way.
+
+# Minification
+
+This gem does not include minified and compressed version of qTip2 since there is no need of.
+This is done automatically by [Rails asset pipeline](http://guides.rubyonrails.org/asset_pipeline.html).
+
+# License
+
+qTip2 is being developed by [Craig Thompson](http://craigsworks.com/) and is dual-licensed
+under the open source [MIT](http://en.wikipedia.org/wiki/MIT_License) and
+[GPLv2](http://en.wikipedia.org/wiki/MIT_License) licenses.
+
+This gem is licensed under [MIT license](https://raw.github.com/tkrotoff/jquery-qtip2-rails/master/LICENSE).
