@@ -19,13 +19,12 @@ Or install it yourself as:
 
 ## Usage
 
-The use of qTip2 can be [customized](http://craigsworks.com/projects/qtip2/download/) to fit your own needs.
+qTip2 can be [customized](http://craigsworks.com/projects/qtip2/download/) to fit your own needs.
 This gem works in a similar manner.
 
 ### "Full" version of qTip2
 
-The full version of qTip2 includes all its plugins. This is the default and conservative choice and
-I recommend you to use this version.
+The full version of qTip2 includes all its plugins. This is the recommended version.
 
 Add the following JavaScript file to `app/assets/javascripts/application.js`:
 
@@ -47,26 +46,26 @@ File `app/assets/javascripts/application.js`:
 
 You can also create your own `app/assets/javascripts/jquery.qtip.js` file:
 
-    //= include ./jquery-qtip/header.txt
-    //= include ./jquery-qtip/intro.js
-    //= include ./jquery-qtip/core.js
-    //= include ./jquery-qtip/ajax/ajax.js
-    //= include ./jquery-qtip/bgiframe/bgiframe.js
-    //= include ./jquery-qtip/imagemap/imagemap.js
-    //= include ./jquery-qtip/modal/modal.js
-    //= include ./jquery-qtip/svg/svg.js
-    //= include ./jquery-qtip/tips/tips.js
-    //= include ./jquery-qtip/outro.js
+    //= include jquery-qtip/header.txt
+    //= include jquery-qtip/intro.js
+    //= include jquery-qtip/core.js
+    //= include jquery-qtip/ajax/ajax.js
+    //= include jquery-qtip/bgiframe/bgiframe.js
+    //= include jquery-qtip/imagemap/imagemap.js
+    //= include jquery-qtip/modal/modal.js
+    //= include jquery-qtip/svg/svg.js
+    //= include jquery-qtip/tips/tips.js
+    //= include jquery-qtip/outro.js
 
 And `app/assets/stylesheets/jquery.qtip.css` file:
 
     /*
-     *= include ./jquery-qtip/header.txt
-     *= include ./jquery-qtip/core.css
-     *= include ./jquery-qtip/modal/modal.css
-     *= include ./jquery-qtip/tips/tips.css
-     *= include ./jquery-qtip/styles.css
-     *= include ./jquery-qtip/extra.css
+     *= include jquery-qtip/header.txt
+     *= include jquery-qtip/core.css
+     *= include jquery-qtip/modal/modal.css
+     *= include jquery-qtip/tips/tips.css
+     *= include jquery-qtip/styles.css
+     *= include jquery-qtip/extra.css
     */
 
 This allows you to enable only the plugins that you need and thus reduce qTip2 size.
