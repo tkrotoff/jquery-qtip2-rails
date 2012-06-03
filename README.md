@@ -77,6 +77,21 @@ Files `jquery.qtip.js` and `jquery.qtip.basic.js` provided with this gem work th
 This gem does not include minified and compressed version of qTip2 since there is no need of.
 This is done automatically by [Rails asset pipeline](http://guides.rubyonrails.org/asset_pipeline.html).
 
+# qTip2 Twitter Bootstrap theme
+
+qTip2 includes a [Twitter Bootstrap theme](http://craigsworks.com/projects/qtip2/docs/style/#classes).
+
+![Bootstrap theme](https://a248.e.akamai.net/camo.github.com/088ac0e36bc7deffbdf49b1d32423c1ae6a999d3/687474703a2f2f696d6731352e686f7374696e67706963732e6e65742f706963732f33353330373571546970626f6f7473747261706f726967696e616c2e706e67)
+
+How to use:
+
+    $('.selector').qtip({
+      content: 'Hello World!'
+      style: {
+        classes: 'ui-tooltip-bootstrap'
+      }
+    })
+
 # License
 
 qTip2 is being developed by [Craig Thompson](http://craigsworks.com/) and is dual-licensed
