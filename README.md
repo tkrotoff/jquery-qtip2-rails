@@ -46,26 +46,26 @@ File `app/assets/javascripts/application.js`:
 
 You can also create your own `app/assets/javascripts/jquery.qtip.js` file:
 
-    //= include jquery-qtip/header.txt
-    //= include jquery-qtip/intro.js
-    //= include jquery-qtip/core.js
-    //= include jquery-qtip/ajax/ajax.js
-    //= include jquery-qtip/bgiframe/bgiframe.js
-    //= include jquery-qtip/imagemap/imagemap.js
-    //= include jquery-qtip/modal/modal.js
-    //= include jquery-qtip/svg/svg.js
-    //= include jquery-qtip/tips/tips.js
-    //= include jquery-qtip/outro.js
+    //= include jquery-qtip/src/header.txt
+    //= include jquery-qtip/src/intro.js
+    //= include jquery-qtip/src/core.js
+    //= include jquery-qtip/src/ajax/ajax.js
+    //= include jquery-qtip/src/bgiframe/bgiframe.js
+    //= include jquery-qtip/src/imagemap/imagemap.js
+    //= include jquery-qtip/src/modal/modal.js
+    //= include jquery-qtip/src/svg/svg.js
+    //= include jquery-qtip/src/tips/tips.js
+    //= include jquery-qtip/src/outro.js
 
 And `app/assets/stylesheets/jquery.qtip.css` file:
 
     /*
-     *= include jquery-qtip/header.txt
-     *= include jquery-qtip/core.css
-     *= include jquery-qtip/modal/modal.css
-     *= include jquery-qtip/tips/tips.css
-     *= include jquery-qtip/styles.css
-     *= include jquery-qtip/extra.css
+     *= include jquery-qtip/src/header.txt
+     *= include jquery-qtip/src/core.css
+     *= include jquery-qtip/src/modal/modal.css
+     *= include jquery-qtip/src/tips/tips.css
+     *= include jquery-qtip/src/styles.css
+     *= include jquery-qtip/src/extra.css
     */
 
 This allows you to enable only the plugins that you need and thus reduce qTip2 size.
