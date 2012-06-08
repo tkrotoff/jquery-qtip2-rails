@@ -9,7 +9,8 @@ function Modal(api)
 		namespace = globalNamespace + api.id,
 		attr = 'is-modal-qtip',
 		docBody = $(document.body),
-		overlay;
+		focusableSelector = PLUGINS.modal.focusable.join(','),
+		focusableElems = {}, overlay;
 
 	// Setup option set checks
 	api.checks.modal = {
@@ -19,8 +20,40 @@ function Modal(api)
 			
 			// Show the modal if not visible already and tooltip is visible
 			elems.overlay.toggle( tooltip.is(':visible') );
-		}
+		},
+		'^content.text$': updateFocusable
 	};
+
+	function updateFocusable() {
+		focusableElems = $(focusableSelector, tooltip).not('[disabled]').map(function() {
+			return typeof this.focus === 'function' ? this : null;
+		});
+	}
+
+	function focusInputs(blurElems) {
+		// Blurring body element in IE causes window.open windows to unfocus!
+		if(focusableElems.length < 1 && blurElems.length) { blurElems.not('body').blur(); }
+
+		// Focus the inputs
+		else { focusableElems.first().focus(); }
+	}
+
+	function stealFocus(event) {
+		var target = $(event.target),
+			container = target.closest('.qtip'),
+			targetOnTop;
+
+		// Determine if input container target is above this
+		targetOnTop = container.length < 1 ? FALSE :
+			(parseInt(container[0].style.zIndex, 10) > parseInt(tooltip[0].style.zIndex, 10));
+
+		// If we're showing a modal, but focus has landed on an input below
+		// this modal, divert focus to the first visible input in this modal
+		// or if we can't find one... the tooltip itself
+		if(!targetOnTop && ($(event.target).closest(selector)[0] !== tooltip[0])) {
+			focusInputs(target);
+		}
+	}
 
 	$.extend(self, {
 		init: function()
@@ -67,7 +100,7 @@ function Modal(api)
 				curIndex = parseInt(tooltip[0].style.zIndex, 10);
 
 				// Set overlay z-index
-				overlay[0].style.zIndex = newIndex - 1;
+				overlay[0].style.zIndex = newIndex - 2;
 
 				// Reduce modal z-index's and keep them properly ordered
 				qtips.each(function() {
@@ -95,7 +128,7 @@ function Modal(api)
 
 			// Apply keyboard "Escape key" close handler
 			if(options.escape) {
-				$(window).unbind(namespace).bind('keydown'+namespace, function(event) {
+				$(document).unbind(namespace).bind('keydown'+namespace, function(event) {
 					if(event.keyCode === 27 && tooltip.hasClass(focusClass)) {
 						api.hide(event);
 					}
@@ -108,6 +141,9 @@ function Modal(api)
 					if(tooltip.hasClass(focusClass)) { api.hide(event); }
 				});
 			}
+
+			// Update focusable elements
+			updateFocusable();
 
 			return self;
 		},
@@ -128,6 +164,7 @@ function Modal(api)
 				html: '<div></div>',
 				mousedown: function() { return FALSE; }
 			})
+			.hide()
 			.insertAfter( $(selector).last() );
 
 			// Update position on window resize or scroll
@@ -168,25 +205,18 @@ function Modal(api)
 				// Toggle backdrop cursor style on show
 				overlay.toggleClass('blurs', options.blur);
 
-				// Make sure we can't focus anything outside the tooltip
-				docBody.bind('focusin'+namespace, function(event) {
-					var target = $(event.target),
-						container = target.closest('.qtip'),
+				// IF the modal can steal the focus
+				if(options.stealfocus !== FALSE) {
+					// Make sure we can't focus anything outside the tooltip
+					docBody.bind('focusin'+namespace, stealFocus);
 
-					// Determine if input container target is above this
-					targetOnTop = container.length < 1 ? FALSE : 
-						(parseInt(container[0].style.zIndex, 10) > parseInt(tooltip[0].style.zIndex, 10)); 
-
-					// If we're showing a modal, but focus has landed on an input below
-					// this modal, divert focus to the first visible input in this modal
-					if(!targetOnTop && ($(event.target).closest(selector)[0] !== tooltip[0])) {
-						tooltip.find('input:visible').filter(':first').focus();
-					}
-				});
+					// Blur the current item and focus anything in the modal we an
+					focusInputs( $('body *') );
+				}
 			}
 			else {
 				// Undelegate focus handler
-				docBody.undelegate('*', 'focusin'+namespace);
+				docBody.unbind('focusin'+namespace);
 			}
 
 			// Stop all animations
@@ -234,7 +264,7 @@ function Modal(api)
 				// Remove overlay if needed
 				if(delBlanket) {
 					elems.overlay.remove();
-					$(window).unbind(globalNamespace);
+					$(document).unbind(globalNamespace);
 				}
 				else {
 					elems.overlay.unbind(globalNamespace+api.id);
@@ -272,6 +302,10 @@ PLUGINS.modal.sanitize = function(opts) {
 // Base z-index for all modal tooltips (use qTip core z-index as a base)
 PLUGINS.modal.zindex = QTIP.zindex + 1000;
 
+// Defines the selector used to select all 'focusable' elements within the modal when using the show.modal.stealfocus option.
+// 	Selectors initially taken from http://stackoverflow.com/questions/7668525/is-there-a-jquery-selector-to-get-all-elements-that-can-get-focus
+PLUGINS.modal.focusable = ['a[href]', 'area[href]', 'input', 'select', 'textarea', 'button', 'iframe', 'object', 'embed', '[tabindex]', '[contenteditable]']
+
 // Extend original api defaults
 $.extend(TRUE, QTIP.defaults, {
 	show: {
@@ -279,6 +313,7 @@ $.extend(TRUE, QTIP.defaults, {
 			on: FALSE,
 			effect: TRUE,
 			blur: TRUE,
+			stealfocus: TRUE,
 			escape: TRUE
 		}
 	}

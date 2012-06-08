@@ -1279,8 +1279,11 @@ function QTip(target, options, id, attr)
 					position = position.offset;
 				}
 
-				// Adjust for position.fixed tooltips (and also iOS scroll bug in v3.2 - v4.0)
-				if((PLUGINS.iOS < 4.1 && PLUGINS.iOS > 3.1) || PLUGINS.iOS == 4.3 || (!PLUGINS.iOS && fixed)) {
+				// Adjust for position.fixed tooltips (and also iOS scroll bug in v3.2-4.0 & v4.3-4.3.2)
+				if((PLUGINS.iOS > 3.1 && PLUGINS.iOS < 4.1) || 
+					(PLUGINS.iOS >= 4.3 && PLUGINS.iOS < 4.33) || 
+					(!PLUGINS.iOS && fixed)
+				){
 					win = $(window);
 					position.left -= win.scrollLeft();
 					position.top -= win.scrollTop();
@@ -1551,7 +1554,8 @@ function init(id, opts)
 
 	// Remove title attribute and store it if present
 	if(config.suppress && (title = $.attr(this, 'title'))) {
-		$(this).removeAttr('title').attr(oldtitle, title);
+		// Final attr call fixes event delegatiom and IE default tooltip showing problem
+		$(this).removeAttr('title').attr(oldtitle, title).attr('title', '');
 	}
 
 	// Initialize the tooltip and add API reference
@@ -1763,9 +1767,9 @@ PLUGINS = QTIP.plugins = {
 	/*
 	 * iOS 3.2 - 4.0 scroll fix detection used in offset() function.
 	 */
-	iOS: parseFloat(
-		('' + (/CPU.*OS ([0-9_]{1,3})|(CPU like).*AppleWebKit.*Mobile/i.exec(navigator.userAgent) || [0,''])[1])
-			.replace('undefined', '3_2').replace('_','.')
+	iOS: parseFloat( 
+		('' + (/CPU.*OS ([0-9_]{1,5})|(CPU like).*AppleWebKit.*Mobile/i.exec(navigator.userAgent) || [0,''])[1])
+		.replace('undefined', '3_2').replace('_', '.').replace('_', '')
 	) || FALSE,
 
 	/*
