@@ -14,22 +14,3 @@
 //= require jquery_ujs
 //= require jquery.qtip.js
 //= require_tree .
-
-$(document).ready(function() {
-  $('#title').qtip({
-    position: { target: 'mouse', adjust: { x: 10,  y: 10 } }
-  });
-
-  $('#no_title').qtip({
-    position: { target: 'mouse', adjust: { x: 10,  y: 10 } },
-    content: "no_title"
-  });
-
-  $('#ui-tooltip-rounded').qtip({
-    position: { target: 'mouse', adjust: { x: 10,  y: 10 } },
-    content: "ui-tooltip-rounded",
-    style: {
-      classes: 'ui-tooltip-rounded'
-    }
-  });
-});
