@@ -9,7 +9,11 @@ require "sprockets/railtie"
 require "rails/test_unit/railtie"
 
 Bundler.require
-require "jquery-qtip2-rails"
+#require "jquery-qtip2-rails"
+
+# Error couldn't find file 'jquery'
+# See http://www.ruby-forum.com/topic/2484569
+require 'jquery-rails'
 
 module Dummy
   class Application < Rails::Application
