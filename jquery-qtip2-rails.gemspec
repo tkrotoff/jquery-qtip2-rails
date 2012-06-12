@@ -16,4 +16,6 @@ Gem::Specification.new do |gem|
   gem.version       = Jquery::Qtip2::Rails::VERSION
 
   gem.add_dependency "railties", ">= 3.1.0"
+
+  gem.add_development_dependency 'rails'
 end
