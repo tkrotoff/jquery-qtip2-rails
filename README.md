@@ -72,12 +72,12 @@ This allows you to enable only the plugins that you need and thus reduce qTip2 s
 This is possible thanks to the asset pipeline preprocessor `include` directive.
 Files `jquery.qtip.js` and `jquery.qtip.basic.js` provided with this gem work the exact same way.
 
-# Minification
+## Minification
 
 This gem does not include minified and compressed version of qTip2 since there is no need of.
 This is done automatically by [Rails asset pipeline](http://guides.rubyonrails.org/asset_pipeline.html).
 
-# qTip2 Twitter Bootstrap theme
+## qTip2 Twitter Bootstrap theme
 
 qTip2 includes a [Twitter Bootstrap theme](http://craigsworks.com/projects/qtip2/docs/style/#classes).
 
@@ -92,7 +92,7 @@ How to use:
       }
     })
 
-# License
+## License
 
 qTip2 is being developed by [Craig Thompson](http://craigsworks.com/) and is dual-licensed
 under the open source [MIT](http://en.wikipedia.org/wiki/MIT_License) and
