@@ -8,20 +8,31 @@ $(document).ready(function() {
 
   $('#no_title').qtip({
     position: { target: 'mouse', adjust: { x: 10,  y: 10 } },
-    content: "no_title"
+    content: 'no_title'
   });
 
   $('#ui-tooltip-rounded').qtip({
     position: { target: 'mouse', adjust: { x: 10,  y: 10 } },
-    content: "ui-tooltip-rounded",
+    content: 'ui-tooltip-rounded',
     style: {
       classes: 'ui-tooltip-rounded'
     }
   });
 
   $('#ui-tooltip-bootstrap').qtip({
-    position: { target: 'mouse', adjust: { x: 10,  y: 10 } },
-    content: "ui-tooltip-bootstrap",
+    position: {
+      my: 'bottom center',
+      at: 'top center',
+      target: 'mouse',
+      viewport: $(window) // Keep the tooltip on-screen at all times
+    },
+    content: {
+      title: {
+        button: 'close',
+        text: 'ui-tooltip-bootstrap'
+      },
+      text: 'ui-tooltip-bootstrap'
+    },
     style: {
       classes: 'ui-tooltip-bootstrap'
     }
@@ -29,7 +40,7 @@ $(document).ready(function() {
 
   $('#ui-tooltip-shadow-rounded').qtip({
     position: { target: 'mouse', adjust: { x: 10,  y: 10 } },
-    content: "ui-tooltip-shadow ui-tooltip-rounded",
+    content: 'ui-tooltip-shadow ui-tooltip-rounded',
     style: {
       classes: 'ui-tooltip-shadow ui-tooltip-rounded'
     }
