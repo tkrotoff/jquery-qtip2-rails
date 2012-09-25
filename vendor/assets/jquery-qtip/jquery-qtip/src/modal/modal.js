@@ -21,7 +21,9 @@ function Modal(api)
 			// Show the modal if not visible already and tooltip is visible
 			elems.overlay.toggle( tooltip.is(':visible') );
 		},
-		'^content.text$': updateFocusable
+		'^content.text$': function() {
+			updateFocusable();
+		}
 	};
 
 	function updateFocusable() {
@@ -211,7 +213,7 @@ function Modal(api)
 					docBody.bind('focusin'+namespace, stealFocus);
 
 					// Blur the current item and focus anything in the modal we an
-					focusInputs( $('body *') );
+					focusInputs( $('body :focus') );
 				}
 			}
 			else {
@@ -300,11 +302,11 @@ PLUGINS.modal.sanitize = function(opts) {
 };
 
 // Base z-index for all modal tooltips (use qTip core z-index as a base)
-PLUGINS.modal.zindex = QTIP.zindex + 1000;
+PLUGINS.modal.zindex = QTIP.zindex - 200;
 
 // Defines the selector used to select all 'focusable' elements within the modal when using the show.modal.stealfocus option.
-// 	Selectors initially taken from http://stackoverflow.com/questions/7668525/is-there-a-jquery-selector-to-get-all-elements-that-can-get-focus
-PLUGINS.modal.focusable = ['a[href]', 'area[href]', 'input', 'select', 'textarea', 'button', 'iframe', 'object', 'embed', '[tabindex]', '[contenteditable]']
+// Selectors initially taken from http://stackoverflow.com/questions/7668525/is-there-a-jquery-selector-to-get-all-elements-that-can-get-focus
+PLUGINS.modal.focusable = ['a[href]', 'area[href]', 'input', 'select', 'textarea', 'button', 'iframe', 'object', 'embed', '[tabindex]', '[contenteditable]'];
 
 // Extend original api defaults
 $.extend(TRUE, QTIP.defaults, {

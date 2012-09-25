@@ -37,7 +37,8 @@ function Tip(qTip, command)
 		color = { },
 		border = opts.border || 0,
 		namespace = '.qtip-tip',
-		hasCanvas = !!($('<canvas />')[0] || {}).getContext;
+		hasCanvas = !!($('<canvas />')[0] || {}).getContext,
+		tiphtml;
 
 	self.corner = NULL;
 	self.mimic = NULL;
@@ -75,10 +76,14 @@ function Tip(qTip, command)
 		}
 	};
 
+	function whileVisible(callback) {
+		var visible = tooltip.is(':visible');
+		tooltip.show(); callback(); tooltip.toggle(visible);
+	}
+
 	function swapDimensions() {
-		var temp = size.width;
-		size.width = size.height;
-		size.height = temp;
+		size.width = opts.height;
+		size.height = opts.width;
 	}
 
 	function resetDimensions() {
@@ -100,19 +105,19 @@ function Tip(qTip, command)
 		// If our tip position isn't fixed e.g. doesn't adjust with viewport...
 		if(self.corner.fixed !== TRUE) {
 			// Horizontal - Shift or flip method
-			if(horizontal === 'shift' && newCorner.precedance === 'x' && adjust.left && newCorner.y !== 'center') {
-				newCorner.precedance = newCorner.precedance === 'x' ? 'y' : 'x';
+			if(horizontal === SHIFT && newCorner.precedance === X && adjust.left && newCorner.y !== CENTER) {
+				newCorner.precedance = newCorner.precedance === X ? Y : X;
 			}
-			else if(horizontal !== 'shift' && adjust.left){
-				newCorner.x = newCorner.x === 'center' ? (adjust.left > 0 ? 'left' : 'right') : (newCorner.x === 'left' ? 'right' : 'left');
+			else if(horizontal !== SHIFT && adjust.left){
+				newCorner.x = newCorner.x === CENTER ? (adjust.left > 0 ? LEFT : RIGHT) : (newCorner.x === LEFT ? RIGHT : LEFT);
 			}
 
 			// Vertical - Shift or flip method
-			if(vertical === 'shift' && newCorner.precedance === 'y' && adjust.top && newCorner.x !== 'center') {
-				newCorner.precedance = newCorner.precedance === 'y' ? 'x' : 'y';
+			if(vertical === SHIFT && newCorner.precedance === Y && adjust.top && newCorner.x !== CENTER) {
+				newCorner.precedance = newCorner.precedance === Y ? X : Y;
 			}
-			else if(vertical !== 'shift' && adjust.top) {
-				newCorner.y = newCorner.y === 'center' ? (adjust.top > 0 ? 'top' : 'bottom') : (newCorner.y === 'top' ? 'bottom' : 'top');
+			else if(vertical !== SHIFT && adjust.top) {
+				newCorner.y = newCorner.y === CENTER ? (adjust.top > 0 ? TOP : BOTTOM) : (newCorner.y === TOP ? BOTTOM : TOP);
 			}
 
 			// Update and redraw the tip if needed (check cached details of last drawn tip)
@@ -123,8 +128,8 @@ function Tip(qTip, command)
 
 		// Setup tip offset properties
 		offset = self.position(newCorner, adjust);
-		offset[ newCorner.x ] += borderWidth(newCorner, newCorner.x, TRUE);
-		offset[ newCorner.y ] += borderWidth(newCorner, newCorner.y, TRUE);
+		offset[ newCorner.x ] += parseWidth(newCorner, newCorner.x);
+		offset[ newCorner.y ] += parseWidth(newCorner, newCorner.y);
 
 		// Readjust offset object to make it left/top
 		if(offset.right !== undefined) { offset.left = -offset.right; }
@@ -132,8 +137,8 @@ function Tip(qTip, command)
 		offset.user = Math.max(0, opts.offset);
 
 		// Viewport "shift" specific adjustments
-		if(shift.left = (horizontal === 'shift' && !!adjust.left)) {
-			if(newCorner.x === 'center') {
+		if(shift.left = (horizontal === SHIFT && !!adjust.left)) {
+			if(newCorner.x === CENTER) {
 				css['margin-left'] = shift.x = offset['margin-left'] - adjust.left;
 			}
 			else {
@@ -145,11 +150,11 @@ function Tip(qTip, command)
 					shift.left = FALSE;
 				}
 				
-				css[ offset.right !== undefined ? 'right' : 'left' ] = shift.x;
+				css[ offset.right !== undefined ? RIGHT : LEFT ] = shift.x;
 			}
 		}
-		if(shift.top = (vertical === 'shift' && !!adjust.top)) {
-			if(newCorner.y === 'center') {
+		if(shift.top = (vertical === SHIFT && !!adjust.top)) {
+			if(newCorner.y === CENTER) {
 				css['margin-top'] = shift.y = offset['margin-top'] - adjust.top;
 			}
 			else {
@@ -161,63 +166,127 @@ function Tip(qTip, command)
 					shift.top = FALSE;
 				}
 
-				css[ offset.bottom !== undefined ? 'bottom' : 'top' ] = shift.y;
+				css[ offset.bottom !== undefined ? BOTTOM : TOP ] = shift.y;
 			}
 		}
 
 		/*
-		 * If the tip is adjusted in both dimensions, or in a
-		 * direction that would cause it to be anywhere but the
-		 * outer border, hide it!
-		 */
+		* If the tip is adjusted in both dimensions, or in a
+		* direction that would cause it to be anywhere but the
+		* outer border, hide it!
+		*/
 		elems.tip.css(css).toggle(
-			!((shift.x && shift.y) || (newCorner.x === 'center' && shift.y) || (newCorner.y === 'center' && shift.x))
+			!((shift.x && shift.y) || (newCorner.x === CENTER && shift.y) || (newCorner.y === CENTER && shift.x))
 		);
 
 		// Adjust position to accomodate tip dimensions
-		pos.left -= offset.left.charAt ? offset.user : horizontal !== 'shift' || shift.top || !shift.left && !shift.top ? offset.left : 0;
-		pos.top -= offset.top.charAt ? offset.user : vertical !== 'shift' || shift.left || !shift.left && !shift.top ? offset.top : 0;
+		pos.left -= offset.left.charAt ? offset.user : horizontal !== SHIFT || shift.top || !shift.left && !shift.top ? offset.left : 0;
+		pos.top -= offset.top.charAt ? offset.user : vertical !== SHIFT || shift.left || !shift.left && !shift.top ? offset.top : 0;
 
 		// Cache details
 		cache.left = adjust.left; cache.top = adjust.top;
 		cache.corner = newCorner.clone();
 	}
 
+	function parseCorner() {
+		var corner = opts.corner,
+			posOptions = qTip.options.position,
+			at = posOptions.at,
+			my = posOptions.my.string ? posOptions.my.string() : posOptions.my;
+
+		// Detect corner and mimic properties
+		if(corner === FALSE || (my === FALSE && at === FALSE)) {
+			return FALSE;
+		}
+		else {
+			if(corner === TRUE) {
+				self.corner = new PLUGINS.Corner(my);
+			}
+			else if(!corner.string) {
+				self.corner = new PLUGINS.Corner(corner);
+				self.corner.fixed = TRUE;
+			}
+		}
+
+		// Cache it
+		cache.corner = new PLUGINS.Corner( self.corner.string() );
+
+		return self.corner.string() !== 'centercenter';
+	}
+
 	/* border width calculator */
-	function borderWidth(corner, side, backup) {
+	function parseWidth(corner, side, use) {
 		side = !side ? corner[corner.precedance] : side;
 		
-		var isFluid = tooltip.hasClass(fluidClass),
-			isTitleTop = elems.titlebar && corner.y === 'top',
-			elem = isTitleTop ? elems.titlebar : elems.tooltip,
-			css = 'border-' + side + '-width',
+		var isTitleTop = elems.titlebar && corner.y === TOP,
+			elem = isTitleTop ? elems.titlebar : tooltip,
+			borderSide = 'border-' + side + '-width',
+			css = function(elem) { return parseInt(elem.css(borderSide), 10); },
 			val;
 
-		// Grab the border-width value (add fluid class if needed)
-		tooltip.addClass(fluidClass);
-		val = parseInt(elem.css(css), 10);
-		val = (backup ? val || parseInt(tooltip.css(css), 10) : val) || 0;
-		tooltip.toggleClass(fluidClass, isFluid);
-
+		// Grab the border-width value (make tooltip visible first)
+		whileVisible(function() {
+			val = (use ? css(use) : (css(elems.content) || css(elem) || css(tooltip))) || 0;
+		});
 		return val;
 	}
 
-	function borderRadius(corner) {
-		var isTitleTop = elems.titlebar && corner.y === 'top',
+	function parseRadius(corner) {
+		var isTitleTop = elems.titlebar && corner.y === TOP,
 			elem = isTitleTop ? elems.titlebar : elems.content,
 			moz = $.browser.mozilla,
 			prefix = moz ? '-moz-' : $.browser.webkit ? '-webkit-' : '',
-			side = corner.y + (moz ? '' : '-') + corner.x,
-			css = prefix + (moz ? 'border-radius-' + side : 'border-' + side + '-radius');
+			nonStandard = 'border-radius-' + corner.y + corner.x,
+			standard = 'border-' + corner.y + '-' + corner.x + '-radius',
+			css = function(c) { return parseInt(elem.css(c), 10) || parseInt(tooltip.css(c), 10); },
+			val;
 
-		return parseInt(elem.css(css), 10) || parseInt(tooltip.css(css), 10) || 0;
+		whileVisible(function() {
+			val = css(standard) || css(prefix + standard) || css(prefix + nonStandard) || css(nonStandard) || 0;
+		});
+		return val;
+	}
+
+	function parseColours(actual) {
+		var i, fill, border,
+			tip = elems.tip.css('cssText', ''),
+			corner = actual || self.corner,
+			invalid = /rgba?\(0, 0, 0(, 0)?\)|transparent|#123456/i,
+			borderSide = 'border-' + corner[ corner.precedance ] + '-color',
+			bgColor = 'background-color',
+			transparent = 'transparent',
+			important = ' !important',
+
+			titlebar = elems.titlebar,
+			useTitle = titlebar && (corner.y === TOP || (corner.y === CENTER && tip.position().top + (size.height / 2) + opts.offset < titlebar.outerHeight(TRUE))),
+			colorElem = useTitle ? titlebar : elems.content;
+
+		function css(elem, prop, compare) {
+			var val = elem.css(prop) || transparent;
+			if(compare && val === elem.css(compare)) { return FALSE; }
+			else { return invalid.test(val) ? FALSE : val; }
+		}
+
+		// Ensure tooltip is visible then...
+		whileVisible(function() {
+			// Attempt to detect the background colour from various elements, left-to-right precedance
+			color.fill = css(tip, bgColor) || css(colorElem, bgColor) || css(elems.content, bgColor) || 
+				css(tooltip, bgColor) || tip.css(bgColor);
+
+			// Attempt to detect the correct border side colour from various elements, left-to-right precedance
+			color.border = css(tip, borderSide, 'color') || css(colorElem, borderSide, 'color') || 
+				css(elems.content, borderSide, 'color') || css(tooltip, borderSide, 'color') || tooltip.css(borderSide);
+
+			// Reset background and border colours
+			$('*', tip).add(tip).css('cssText', bgColor+':'+transparent+important+';border:0'+important+';');
+		});
 	}
 
 	function calculateSize(corner) {
-		var y = corner.precedance === 'y',
-			width = size [ y ? 'width' : 'height' ],
-			height = size [ y ? 'height' : 'width' ],
-			isCenter = corner.string().indexOf('center') > -1,
+		var y = corner.precedance === Y,
+			width = size [ y ? WIDTH : HEIGHT ],
+			height = size [ y ? HEIGHT : WIDTH ],
+			isCenter = corner.string().indexOf(CENTER) > -1,
 			base = width * (isCenter ? 0.5 : 1),
 			pow = Math.pow,
 			round = Math.round,
@@ -238,10 +307,15 @@ function Tip(qTip, command)
 		return { height: result[ y ? 0 : 1 ], width: result[ y ? 1 : 0 ] };
 	}
 
+	function createVML(tag, props, style) {
+		return '<qvml:'+tag+' xmlns="urn:schemas-microsoft.com:vml" class="qtip-vml" '+(props||'')+
+			' style="behavior: url(#default#VML); '+(style||'')+ '" />';
+	}
+
 	$.extend(self, {
 		init: function()
 		{
-			var enabled = self.detectCorner() && (hasCanvas || $.browser.msie);
+			var enabled = parseCorner() && (hasCanvas || $.browser.msie);
 
 			// Determine tip corner and type
 			if(enabled) {
@@ -251,81 +325,20 @@ function Tip(qTip, command)
 
 				// Bind update events
 				tooltip.unbind(namespace).bind('tooltipmove'+namespace, reposition);
+
+				// Fix for issue of tips not showing after redraw in IE (VML...)
+				if(!hasCanvas) {
+					tooltip.bind('tooltipredraw tooltipredrawn', function(event) {
+						if(event.type === 'tooltipredraw') {
+							tiphtml = elems.tip.html();
+							elems.tip.html('');
+						}
+						else { elems.tip.html(tiphtml); }
+					});
+				}
 			}
 			
 			return enabled;
-		},
-
-		detectCorner: function()
-		{
-			var corner = opts.corner,
-				posOptions = qTip.options.position,
-				at = posOptions.at,
-				my = posOptions.my.string ? posOptions.my.string() : posOptions.my;
-
-			// Detect corner and mimic properties
-			if(corner === FALSE || (my === FALSE && at === FALSE)) {
-				return FALSE;
-			}
-			else {
-				if(corner === TRUE) {
-					self.corner = new PLUGINS.Corner(my);
-				}
-				else if(!corner.string) {
-					self.corner = new PLUGINS.Corner(corner);
-					self.corner.fixed = TRUE;
-				}
-			}
-
-			// Cache it
-			cache.corner = new PLUGINS.Corner( self.corner.string() );
-
-			return self.corner.string() !== 'centercenter';
-		},
-
-		detectColours: function(actual) {
-			var i, fill, border,
-				tip = elems.tip.css('cssText', ''),
-				corner = actual || self.corner,
-				precedance = corner[ corner.precedance ],
-
-				borderSide = 'border-' + precedance + '-color',
-				borderSideCamel = 'border' + precedance.charAt(0) + precedance.substr(1) + 'Color',
-
-				invalid = /rgba?\(0, 0, 0(, 0)?\)|transparent|#123456/i,
-				backgroundColor = 'background-color',
-				transparent = 'transparent',
-				important = ' !important',
-
-				useTitle = elems.titlebar && (corner.y === 'top' || (corner.y === 'center' && tip.position().top + (size.height / 2) + opts.offset < elems.titlebar.outerHeight(1))),
-				colorElem = useTitle ? elems.titlebar : elems.tooltip;
-
-			// Apply the fluid class so we can see our CSS values properly
-			tooltip.addClass(fluidClass);
-
-			// Detect tip colours from CSS styles
-			color.fill = fill = tip.css(backgroundColor);
-			color.border = border = tip[0].style[ borderSideCamel ] || tip.css(borderSide) || tooltip.css(borderSide);
-
-			// Make sure colours are valid
-			if(!fill || invalid.test(fill)) {
-				color.fill = colorElem.css(backgroundColor) || transparent;
-				if(invalid.test(color.fill)) {
-					color.fill = tooltip.css(backgroundColor) || fill;
-				}
-			}
-			if(!border || invalid.test(border) || border === $(document.body).css('color')) {
-				color.border = colorElem.css(borderSide) || transparent;
-				if(invalid.test(color.border) || color.border === colorElem.css('color')) {
-					color.border = tooltip.css(borderSide) || tooltip.css(borderSideCamel) || border;
-				}
-			}
-
-			// Reset background and border colours
-			$('*', tip).add(tip).css('cssText', backgroundColor+':'+transparent+important+';border:0'+important+';');
-
-			// Remove fluid class
-			tooltip.removeClass(fluidClass);
 		},
 
 		create: function()
@@ -346,7 +359,7 @@ function Tip(qTip, command)
 				$('<canvas />').appendTo(elems.tip)[0].getContext('2d').save();
 			}
 			else {
-				vml = '<vml:shape coordorigin="0,0" style="display:inline-block; position:absolute; behavior:url(#default#VML);"></vml:shape>';
+				vml = createVML('shape', 'coordorigin="0,0"', 'position:absolute;');
 				elems.tip.html(vml + vml);
 
 				// Prevent mousing down on the tip since it causes problems with .live() handling in IE due to VML
@@ -360,8 +373,6 @@ function Tip(qTip, command)
 				inner = tip.children(),
 				width = size.width,
 				height = size.height,
-				regular = 'px solid ',
-				transparent = 'px dashed transparent', // Dashed IE6 border-transparency hack. Awesome!
 				mimic = opts.mimic,
 				round = Math.round,
 				precedance, context, coords, translate, newSize;
@@ -386,7 +397,7 @@ function Tip(qTip, command)
 			precedance = mimic.precedance;
 
 			// Ensure the tip width.height are relative to the tip position
-			if(corner.precedance === 'x') { swapDimensions(); }
+			if(corner.precedance === X) { swapDimensions(); }
 			else { resetDimensions(); }
 
 			// Set the tip dimensions
@@ -396,12 +407,12 @@ function Tip(qTip, command)
 			});
 
 			// Update our colours
-			self.detectColours(corner);
+			parseColours(corner);
 
 			// Detect border width, taking into account colours
 			if(color.border !== 'transparent') {
 				// Grab border width
-				border = borderWidth(corner, NULL, TRUE);
+				border = parseWidth(corner, NULL);
 
 				// If border width isn't zero, use border color as fill (1.0 style tips)
 				if(opts.border === 0 && border > 0) { color.fill = color.border; }
@@ -421,16 +432,16 @@ function Tip(qTip, command)
 			tip.css(newSize);
 
 			// Calculate tip translation
-			if(corner.precedance === 'y') {
+			if(corner.precedance === Y) {
 				translate = [
-					round(mimic.x === 'left' ? border : mimic.x === 'right' ? newSize.width - width - border : (newSize.width - width) / 2),
-					round(mimic.y === 'top' ?  newSize.height - height : 0)
+					round(mimic.x === LEFT ? border : mimic.x === RIGHT ? newSize.width - width - border : (newSize.width - width) / 2),
+					round(mimic.y === TOP ? newSize.height - height : 0)
 				];
 			}
 			else {
 				translate = [
-					round(mimic.x === 'left' ? newSize.width - width : 0),
-					round(mimic.y === 'top' ? border : mimic.y === 'bottom' ? newSize.height - height - border : (newSize.height - height) / 2)
+					round(mimic.x === LEFT ? newSize.width - width : 0),
+					round(mimic.y === TOP ? border : mimic.y === BOTTOM ? newSize.height - height - border : (newSize.height - height) / 2)
 				];
 			}
 
@@ -487,9 +498,10 @@ function Tip(qTip, command)
 
 				// Set initial CSS
 				inner.css({
-					antialias: ''+(mimic.string().indexOf('center') > -1),
-					left: translate[0] - (translate[2] * Number(precedance === 'x')),
-					top: translate[1] - (translate[2] * Number(precedance === 'y')),
+					coordsize: (width+border) + ' ' + (height+border),
+					antialias: ''+(mimic.string().indexOf(CENTER) > -1),
+					left: translate[0],
+					top: translate[1],
 					width: width + border,
 					height: height + border
 				})
@@ -504,13 +516,12 @@ function Tip(qTip, command)
 						filled: !!i,
 						stroked: !i
 					})
-					.css({ display: border || i ? 'block' : 'none' });
+					.toggle(!!(border || i));
 
 					// Check if border is enabled and add stroke element
 					if(!i && $this.html() === '') {
 						$this.html(
-							'<vml:stroke weight="'+(border*2)+'px" color="'+color.border+'" miterlimit="1000" joinstyle="miter" ' +
-							' style="behavior:url(#default#VML); display:inline-block;" />'
+							createVML('stroke', 'weight="'+(border*2)+'px" color="'+color.border+'" miterlimit="1000" joinstyle="miter"')
 						);
 					}
 				});
@@ -540,27 +551,28 @@ function Tip(qTip, command)
 
 			// Setup corners and offset array
 			corners = [ corner.x, corner.y ];
-			if(precedance === 'x') { corners.reverse(); }
+			if(precedance === X) { corners.reverse(); }
 
 			// Calculate tip position
 			$.each(corners, function(i, side) {
-				var b, br;
+				var b, bc, br;
 
-				if(side === 'center') {
-					b = precedance === 'y' ? 'left' : 'top';
+				if(side === CENTER) {
+					b = precedance === Y ? LEFT : TOP;
 					position[ b ] = '50%';
-					position['margin-' + b] = -Math.round(dimensions[ precedance === 'y' ? 'width' : 'height' ] / 2) + userOffset;
+					position['margin-' + b] = -Math.round(dimensions[ precedance === Y ? WIDTH : HEIGHT ] / 2) + userOffset;
 				}
 				else {
-					b = borderWidth(corner, side);
-					br = borderRadius(corner);
+					b = parseWidth(corner, side);
+					bc = parseWidth(corner, side, elems.content);
+					br = parseRadius(corner);
 
-					position[ side ] = i ? 0 : (userOffset + (br > b ? br : -b));
+					position[ side ] = i ? bc : (userOffset + (br > b ? br : -b));
 				}
 			});
 
 			// Adjust for tip dimensions
-			position[ corner[precedance] ] -= dimensions[ precedance === 'x' ? 'width' : 'height' ];
+			position[ corner[precedance] ] -= dimensions[ precedance === X ? WIDTH : HEIGHT ];
 
 			// Set and return new position
 			tip.css({ top: '', bottom: '', left: '', right: '', margin: '' }).css(position);
@@ -598,7 +610,7 @@ PLUGINS.tip.sanitize = function(options)
 	if(style && 'tip' in style) {
 		opts = options.style.tip;
 		if(typeof opts !== 'object'){ options.style.tip = { corner: opts }; }
-		if(!(/string|boolean/i).test(typeof opts.corner)) { opts.corner = TRUE; }
+		if(!(/string|boolean/i).test(typeof opts['corner'])) { opts['corner'] = TRUE; }
 		if(typeof opts.width !== 'number'){ delete opts.width; }
 		if(typeof opts.height !== 'number'){ delete opts.height; }
 		if(typeof opts.border !== 'number' && opts.border !== TRUE){ delete opts.border; }
