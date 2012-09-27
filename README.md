@@ -88,12 +88,14 @@ qTip2 includes a [Twitter Bootstrap theme](http://craigsworks.com/projects/qtip2
 
 How to use:
 
-    $('.selector').qtip({
-      content: 'Hello World!'
-      style: {
-        classes: 'ui-tooltip-bootstrap'
-      }
-    })
+```JavaScript
+$('.selector').qtip({
+  content: 'Hello World!'
+  style: {
+    classes: 'ui-tooltip-bootstrap'
+  }
+})
+```
 
 ## License
 
