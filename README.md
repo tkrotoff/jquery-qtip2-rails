@@ -42,30 +42,33 @@ File `app/assets/javascripts/application.js`:
 
     //= require jquery.qtip.basic.js
 
+File `app/assets/javascripts/application.css`:
+
+    //= require jquery.qtip.basic.css
+
 ### Customized version of qTip2
 
 You can also create your own `app/assets/javascripts/jquery.qtip.js` file:
 
-    //= include jquery-qtip/src/header.txt
     //= include jquery-qtip/src/intro.js
     //= include jquery-qtip/src/core.js
-    //= include jquery-qtip/src/ajax/ajax.js
-    //= include jquery-qtip/src/bgiframe/bgiframe.js
-    //= include jquery-qtip/src/imagemap/imagemap.js
-    //= include jquery-qtip/src/modal/modal.js
     //= include jquery-qtip/src/svg/svg.js
+    //= include jquery-qtip/src/ajax/ajax.js
     //= include jquery-qtip/src/tips/tips.js
+    //= include jquery-qtip/src/modal/modal.js
+    //= include jquery-qtip/src/viewport/viewport.js
+    //= include jquery-qtip/src/imagemap/imagemap.js
+    //= include jquery-qtip/src/bgiframe/bgiframe.js
     //= include jquery-qtip/src/outro.js
 
 And `app/assets/stylesheets/jquery.qtip.css` file:
 
     /*
-     *= include jquery-qtip/src/header.txt
      *= include jquery-qtip/src/core.css
-     *= include jquery-qtip/src/modal/modal.css
+     *= include jquery-qtip/src/basic.css
+     *= include jquery-qtip/src/css3.css
      *= include jquery-qtip/src/tips/tips.css
-     *= include jquery-qtip/src/styles.css
-     *= include jquery-qtip/src/extra.css
+     *= include jquery-qtip/src/modal/modal.css
     */
 
 This allows you to enable only the plugins that you need and thus reduce qTip2 size.
@@ -81,7 +84,7 @@ This is done automatically by [Rails asset pipeline](http://guides.rubyonrails.o
 
 qTip2 includes a [Twitter Bootstrap theme](http://craigsworks.com/projects/qtip2/docs/style/#classes).
 
-![Bootstrap theme](https://a248.e.akamai.net/camo.github.com/088ac0e36bc7deffbdf49b1d32423c1ae6a999d3/687474703a2f2f696d6731352e686f7374696e67706963732e6e65742f706963732f33353330373571546970626f6f7473747261706f726967696e616c2e706e67)
+![Bootstrap theme](http://img11.hostingpics.net/pics/628782qtip2bootstrap2.png)
 
 How to use:
 
