@@ -38,23 +38,25 @@
 
 		// Shortcut vars
 		QTIP, PLUGINS, MOUSE,
+		NAMESPACE = 'qtip',
 		usedIDs = {},
-		uitooltip = 'ui-tooltip',
-		widget = 'ui-widget',
-		disabled = 'ui-state-disabled',
-		selector = 'div.qtip.'+uitooltip,
-		defaultClass = uitooltip + '-default',
-		focusClass = uitooltip + '-focus',
-		hoverClass = uitooltip + '-hover',
+		widget = ['ui-widget', 'ui-tooltip'],
+		selector = 'div.qtip.'+NAMESPACE,
+		defaultClass = NAMESPACE + '-default',
+		focusClass = NAMESPACE + '-focus',
+		hoverClass = NAMESPACE + '-hover',
 		replaceSuffix = '_replacedByqTip',
 		oldtitle = 'oldtitle',
-		trackingBound,
-		redrawContainer;
+		trackingBound;
 
-	/*
-	* redraw() container for width/height calculations
-	*/
-	redrawContainer = $('<div/>', { id: 'qtip-rcontainer' });
-	$(function() { redrawContainer.appendTo(document.body); });
-
-
+	// Store mouse coordinates
+	function storeMouse(event)
+	{
+		MOUSE = {
+			pageX: event.pageX,
+			pageY: event.pageY,
+			type: 'mousemove',
+			scrollX: window.pageXOffset || document.body.scrollLeft || document.documentElement.scrollLeft,
+			scrollY: window.pageYOffset || document.body.scrollTop || document.documentElement.scrollTop
+		};
+	}

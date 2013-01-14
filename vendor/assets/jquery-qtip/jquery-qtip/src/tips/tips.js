@@ -139,7 +139,7 @@ function Tip(qTip, command)
 		// Viewport "shift" specific adjustments
 		if(shift.left = (horizontal === SHIFT && !!adjust.left)) {
 			if(newCorner.x === CENTER) {
-				css['margin-left'] = shift.x = offset['margin-left'] - adjust.left;
+				css['margin-left'] = shift.x = offset['margin-left'];
 			}
 			else {
 				props = offset.right !== undefined ?
@@ -155,7 +155,7 @@ function Tip(qTip, command)
 		}
 		if(shift.top = (vertical === SHIFT && !!adjust.top)) {
 			if(newCorner.y === CENTER) {
-				css['margin-top'] = shift.y = offset['margin-top'] - adjust.top;
+				css['margin-top'] = shift.y = offset['margin-top'];
 			}
 			else {
 				props = offset.bottom !== undefined ?
@@ -325,17 +325,6 @@ function Tip(qTip, command)
 
 				// Bind update events
 				tooltip.unbind(namespace).bind('tooltipmove'+namespace, reposition);
-
-				// Fix for issue of tips not showing after redraw in IE (VML...)
-				if(!hasCanvas) {
-					tooltip.bind('tooltipredraw tooltipredrawn', function(event) {
-						if(event.type === 'tooltipredraw') {
-							tiphtml = elems.tip.html();
-							elems.tip.html('');
-						}
-						else { elems.tip.html(tiphtml); }
-					});
-				}
 			}
 			
 			return enabled;
@@ -351,7 +340,7 @@ function Tip(qTip, command)
 			if(elems.tip) { elems.tip.remove(); }
 
 			// Create tip element and prepend to the tooltip
-			elems.tip = $('<div />', { 'class': 'ui-tooltip-tip' }).css({ width: width, height: height }).prependTo(tooltip);
+			elems.tip = $('<div />', { 'class': 'qtip-tip' }).css({ width: width, height: height }).prependTo(tooltip);
 
 			// Create tip drawing element(s)
 			if(hasCanvas) {
@@ -429,7 +418,7 @@ function Tip(qTip, command)
 
 			// Determine tip size
 			self.size = newSize = calculateSize(corner);
-			tip.css(newSize);
+			tip.css(newSize).css('line-height', newSize.height+'px');
 
 			// Calculate tip translation
 			if(corner.precedance === Y) {

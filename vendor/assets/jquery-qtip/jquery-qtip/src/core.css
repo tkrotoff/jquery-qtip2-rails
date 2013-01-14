@@ -1,22 +1,5 @@
-/* Fluid class for determining actual width in IE */
-#qtip-rcontainer{
-	position: absolute;
-	left: -28000px;
-	top: -28000px;
-	display: block;
-	visibility: hidden;
-}
-
-	/* Fluid class for determining actual width in IE */
-	#qtip-rcontainer .ui-tooltip{
-		display: block !important;
-		visibility: hidden !important;
-		position: static !important;
-		float: left !important;
-	}
-
 /* Core qTip styles */
-.ui-tooltip, .qtip{
+.qtip, .qtip{
 	position: absolute;
 	left: -28000px;
 	top: -28000px;
@@ -27,9 +10,11 @@
 	
 	font-size: 10.5px;
 	line-height: 12px;
+
+	direction: ltr;
 }
 
-	.ui-tooltip-content{
+	.qtip-content{
 		position: relative;
 		padding: 5px 9px;
 		overflow: hidden;
@@ -38,9 +23,8 @@
 		word-wrap: break-word;
 	}
 
-	.ui-tooltip-titlebar{
+	.qtip-titlebar{
 		position: relative;
-		min-height: 14px;
 		padding: 5px 35px 5px 10px;
 		overflow: hidden;
 
@@ -48,39 +32,44 @@
 		font-weight: bold;
 	}
 
-	.ui-tooltip-titlebar + .ui-tooltip-content{ border-top-width: 0 !important; }
+	.qtip-titlebar + .qtip-content{ border-top-width: 0 !important; }
 
-		/* Default close button class */
-		.ui-tooltip-titlebar .ui-state-default{
-			position: absolute;
-			right: 4px;
-			top: 50%;
+	/* Default close button class */
+	.qtip-close{
+		position: absolute;
+		right: -9px; top: -9px;
+
+		cursor: pointer;
+		outline: medium none;
+
+		border-width: 1px;
+		border-style: solid;
+		border-color: transparent;
+	}
+
+		.qtip-titlebar .qtip-close{
+			right: 4px; top: 50%;
 			margin-top: -9px;
-
-			cursor: pointer;
-			outline: medium none;
-
-			border-width: 1px;
-			border-style: solid;
 		}
-		
-		* html .ui-tooltip-titlebar .ui-state-default{ top: 16px; } /* IE fix */
+	
+		* html .qtip-titlebar .qtip-close{ top: 16px; } /* IE fix */
 
-		.ui-tooltip-titlebar .ui-icon,
-		.ui-tooltip-icon .ui-icon{
+		.qtip-titlebar .ui-icon,
+		.qtip-icon .ui-icon{
 			display: block;
 			text-indent: -1000em;
 			direction: ltr;
+			vertical-align: middle;
 		}
 
-		.ui-tooltip-icon, .ui-tooltip-icon .ui-icon{
+		.qtip-icon, .qtip-icon .ui-icon{
 			-moz-border-radius: 3px;
 			-webkit-border-radius: 3px;
 			border-radius: 3px;
 			text-decoration: none;
 		}
 
-			.ui-tooltip-icon .ui-icon{
+			.qtip-icon .ui-icon{
 				width: 18px;
 				height: 14px;
 
@@ -94,13 +83,13 @@
 
 
 /* Applied to 'focused' tooltips e.g. most recently displayed/interacted with */
-.ui-tooltip-focus{}
+.qtip-focus{}
 
 /* Applied on hover of tooltips i.e. added/removed on mouseenter/mouseleave respectively */
-.ui-tooltip-hover{}
+.qtip-hover{}
 
 /* Default tooltip style */
-.ui-tooltip-default{
+.qtip-default{
 	border-width: 1px;
 	border-style: solid;
 	border-color: #F1D031;
@@ -109,17 +98,17 @@
 	color: #555;
 }
 
-	.ui-tooltip-default .ui-tooltip-titlebar{
+	.qtip-default .qtip-titlebar{
 		background-color: #FFEF93;
 	}
 
-	.ui-tooltip-default .ui-tooltip-icon{
+	.qtip-default .qtip-icon{
 		border-color: #CCC;
 		background: #F1F1F1;
 		color: #777;
 	}
 	
-	.ui-tooltip-default .ui-tooltip-titlebar .ui-state-hover{
+	.qtip-default .qtip-titlebar .qtip-close{
 		border-color: #AAA;
 		color: #111;
 	}

@@ -152,7 +152,7 @@ function Modal(api)
 
 		create: function()
 		{
-			var elem = $(overlaySelector);
+			var elem = $(overlaySelector), win = $(window);
 
 			// Return if overlay is already rendered
 			if(elem.length) {
@@ -172,11 +172,11 @@ function Modal(api)
 			// Update position on window resize or scroll
 			function resize() {
 				overlay.css({
-					height: $(window).height(),
-					width: $(window).width()
+					height: win.height(),
+					width: win.width()
 				});
 			}
-			$(window).unbind(globalNamespace).bind('resize'+globalNamespace, resize);
+			win.unbind(globalNamespace).bind('resize'+globalNamespace, resize);
 			resize(); // Fire it initially too
 
 			return overlay;
@@ -197,7 +197,9 @@ function Modal(api)
 			if(!overlay) { overlay = self.create(); }
 
 			// Prevent modal from conflicting with show.solo, and don't hide backdrop is other modals are visible
-			if((overlay.is(':animated') && visible === state) || (!state && modals.length)) { return self; }
+			if((overlay.is(':animated') && visible === state && overlay.data('toggleState') !== FALSE) || (!state && modals.length)) {
+				return self;
+			}
 
 			// State specific...
 			if(state) {
@@ -222,7 +224,7 @@ function Modal(api)
 			}
 
 			// Stop all animations
-			overlay.stop(TRUE, FALSE);
+			overlay.stop(TRUE, FALSE).data('toggleState', state);
 
 			// Use custom function if provided
 			if($.isFunction(effect)) {
@@ -244,7 +246,7 @@ function Modal(api)
 			// Reset position on hide
 			if(!state) {
 				overlay.queue(function(next) {
-					overlay.css({ left: '', top: '' });
+					overlay.css({ left: '', top: '' }).removeData('toggleState');
 					next();
 				});
 			}
@@ -273,7 +275,7 @@ function Modal(api)
 				}
 
 				// Undelegate focus handler
-				docBody.undelegate('*', 'focusin'+namespace);
+				docBody.unbind('focusin'+namespace);
 			}
 
 			// Remove bound events
