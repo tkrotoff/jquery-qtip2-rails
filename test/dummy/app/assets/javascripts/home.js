@@ -11,15 +11,15 @@ $(document).ready(function() {
     content: 'no_title'
   });
 
-  $('#ui-tooltip-rounded').qtip({
+  $('#qtip-rounded').qtip({
     position: { target: 'mouse', adjust: { x: 10,  y: 10 } },
-    content: 'ui-tooltip-rounded',
+    content: 'qtip-rounded',
     style: {
-      classes: 'ui-tooltip-rounded'
+      classes: 'qtip-rounded'
     }
   });
 
-  $('#ui-tooltip-bootstrap').qtip({
+  $('#qtip-bootstrap').qtip({
     position: {
       my: 'bottom center',
       at: 'top center',
@@ -29,20 +29,20 @@ $(document).ready(function() {
     content: {
       title: {
         button: 'close',
-        text: 'ui-tooltip-bootstrap'
+        text: 'qtip-bootstrap'
       },
-      text: 'ui-tooltip-bootstrap'
+      text: 'qtip-bootstrap'
     },
     style: {
-      classes: 'ui-tooltip-bootstrap'
+      classes: 'qtip-bootstrap'
     }
   });
 
-  $('#ui-tooltip-shadow-rounded').qtip({
+  $('#qtip-shadow-rounded').qtip({
     position: { target: 'mouse', adjust: { x: 10,  y: 10 } },
-    content: 'ui-tooltip-shadow ui-tooltip-rounded',
+    content: 'qtip-shadow qtip-rounded',
     style: {
-      classes: 'ui-tooltip-shadow ui-tooltip-rounded'
+      classes: 'qtip-shadow qtip-rounded'
     }
   });
 });

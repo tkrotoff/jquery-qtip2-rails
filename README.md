@@ -58,7 +58,7 @@ You can also create your own `app/assets/javascripts/jquery.qtip.js` file:
     //= include jquery-qtip/src/modal/modal.js
     //= include jquery-qtip/src/viewport/viewport.js
     //= include jquery-qtip/src/imagemap/imagemap.js
-    //= include jquery-qtip/src/bgiframe/bgiframe.js
+    //= include jquery-qtip/src/ie6/ie6.js
     //= include jquery-qtip/src/outro.js
 
 And `app/assets/stylesheets/jquery.qtip.css` file:
@@ -69,6 +69,7 @@ And `app/assets/stylesheets/jquery.qtip.css` file:
      *= include jquery-qtip/src/css3.css
      *= include jquery-qtip/src/tips/tips.css
      *= include jquery-qtip/src/modal/modal.css
+     *= include jquery-qtip/src/ie6/ie6.css
     */
 
 This allows you to enable only the plugins that you need and thus reduce qTip2 size.
@@ -92,7 +93,7 @@ How to use:
 $('.selector').qtip({
   content: 'Hello World!'
   style: {
-    classes: 'ui-tooltip-bootstrap'
+    classes: 'qtip-bootstrap'
   }
 })
 ```
