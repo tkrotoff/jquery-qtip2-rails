@@ -6,5 +6,5 @@
 //= include jquery-qtip/src/modal/modal.js
 //= include jquery-qtip/src/viewport/viewport.js
 //= include jquery-qtip/src/imagemap/imagemap.js
-//= include jquery-qtip/src/bgiframe/bgiframe.js
+//= include jquery-qtip/src/ie6/ie6.js
 //= include jquery-qtip/src/outro.js
