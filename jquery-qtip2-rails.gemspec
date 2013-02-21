@@ -19,4 +19,5 @@ Gem::Specification.new do |gem|
 
   gem.add_development_dependency 'rails'
   gem.add_development_dependency 'jquery-rails'
+  gem.add_development_dependency 'uglifier'
 end
