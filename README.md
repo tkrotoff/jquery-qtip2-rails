@@ -98,6 +98,19 @@ $('.selector').qtip({
 })
 ```
 
+## Rails test/dummy
+
+jquery-qtip2-rails comes with a dummy Rails application that you can run:
+
+Development mode:
+- `bundle`
+- `cd test/dummy && rails s`
+
+Production mode:
+- `bundle`
+- `cd test/dummy && rake assets:precompile`: generates .js and .css files inside test/dummy/public/assets/ + test/dummy/tmp/
+- `cd test/dummy && rails s -e production`
+
 ## License
 
 qTip2 is being developed by [Craig Thompson](http://craigsworks.com/) and is dual-licensed
