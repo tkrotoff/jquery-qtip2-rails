@@ -1,3 +1,5 @@
+**I will not continue to maintain this gem as I don't use qTip2 anymore, if you interested, [contact me](mailto:tkrotoff@gmail.com).**
+
 # jQuery qTip2 for Rails
 
 qTip2 packaged for the Rails 3.1+ asset pipeline.
