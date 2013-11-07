@@ -1,4 +1,4 @@
-**I will not continue to maintain this gem as I don't use qTip2 anymore, if you interested, [contact me](mailto:tkrotoff@gmail.com).**
+**I will not continue to maintain this gem as I don't use qTip2 anymore, if you are interested, [contact me](mailto:tkrotoff@gmail.com).**
 
 # jQuery qTip2 for Rails
 
